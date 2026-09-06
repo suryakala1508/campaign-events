@@ -92,33 +92,33 @@ I have a limited amount of time for the assignment, so i will focus on getting t
 
 My order of priority will be:
 
-1. *** Get the API WORKING ***
+1. **Get the API WORKING**
     - Define the event structure.
     - Implement `POST /events`.
     - Implement `GET /campaigns/{campaign_id}/stats`.
 
-2. *** Handle the event cases correctly ***
+2. **Handle the event cases correctly**
     - Validate the incoming events.
     - Prevent duplicate events fmo being counted more than once.
     - Make sure ;ate and out-of-order events are handles correctly.
 
-3. *** Make concurrent processing reliable ***
-    - Process events concurrently .
+3. **Make concurrent processing reliable**
+    - Process events concurrently.
     - Protect shared data from race conditions.
     - Make sure the final statistics remain correct.
 
-4. *** Add focused tests ***
+4. **Add focused tests**
     - Test duplicate events.
     - Test duplicates across batches.
     - Test invalid input.
     - Test concurrent processing.
 
-5. *** Review the implementation ***
+5. **Review the implementation**
     - Check error handling.
     - Check memory usage.
     - Make sure the API behaviour is clear and consistent.
 
-6. *** Use remaining time for  optional work ***
+6. **Use remaining time for optional work**
     - Consider the optional campaign events endpoint.
     - Make small improvements only if they provide a clear benefit.
 
