@@ -3,7 +3,7 @@
 ## 1.My Interpretation of the problem 
 Relay receives event notifications from third-party delivery providers for marketing messages.
 
-Here `Relay means Backend Service
+Here `Relay` means Backend Service.
 
 The services needs:
 - Accept provider events through `POST/events`.
@@ -27,13 +27,13 @@ My prmiary goal is to build a small,reliable service with clear behaviour rather
 
 - `event_id` is the identifier for one event ,so i will use for duplicate detection.
 
-- If the same id received more than once,i will count it only once
+- If the same id received more than once,i will count it only once.
 
 - Duplicate detection should apply across the service,not just within a single batch.
 
 - `timestamp` represents when the event happened at the provider, not when relay received it.
 
-- I will use the timestamp when calculating the time-based statistics
+- I will use the timestamp when calculating the time-based statistics.
 
 - When statistics are grouped by day, I will use the event's UTC date.
 
@@ -66,8 +66,6 @@ My prmiary goal is to build a small,reliable service with clear behaviour rather
 
 - The maximum size of a single `POST/events` request is not mentioned.
 
-- If single event is malformed or invalid,should we reject the entire batch or only mark that particular event as valid?
-
 ## 4.Questions I would ask the PM if i could 
 
 - When a duplicate event is received ,should i treat it as a succesfull no-op ,or should the API return that indicates it was already processed.
@@ -83,6 +81,8 @@ My prmiary goal is to build a small,reliable service with clear behaviour rather
 - For the `opened` count ,should multiple opens frmo the same contact count multiple items,or should a contact be counted separately?
 
 - When an event arrives late,should it be included based on the date when it actually happened rather than when Relay received it?
+
+- If single event is malformed or invalid,should we reject the entire batch or only mark that particular event as valid?
 
 - What is the expected maximum number of events that counld be sent in a single request ?
 
@@ -100,7 +100,7 @@ My order of priority will be:
 2. **Handle the event cases correctly**
     - Validate the incoming events.
     - Prevent duplicate events fmo being counted more than once.
-    - Make sure ;ate and out-of-order events are handles correctly.
+    - Make sure late and out-of-order events are handles correctly.
 
 3. **Make concurrent processing reliable**
     - Process events concurrently.
@@ -122,7 +122,7 @@ My order of priority will be:
     - Consider the optional campaign events endpoint.
     - Make small improvements only if they provide a clear benefit.
 
-I will avpid spending time on frnotend,deployment,authentication, or other work outside the main requirements.
+I will avoid spending time on frontend,deployment,authentication, or other work outside the main requirements.
 
 
 ---
@@ -130,7 +130,7 @@ I will avpid spending time on frnotend,deployment,authentication, or other work 
 
 ## PART-4 : Scale Memo 
 
-The current implementation uses in-memory storage,which is simple and enough for this assignment. If the event volume becomes very large ,this approach will have some limitations.
+The current implementation uses in-memory storage, which is simple and enough for this assignment. If the event volume becomes very large ,this approach will have some limitations.
 
 ### What breaks first?
 The main problem is the in-memory data.If the server instances are running ,each instance will  have its own data and duplicate checking will its own data and duplicate checking will not be shared.
@@ -144,21 +144,21 @@ For handling a large number of events, I would put a Queue between the API and t
 
 `API ->Queue ->Workers->Database`
 
-This allows multiple workers to process evets at the same time.
+This allows multiple workers to process events at the same time.
 
 ### Campaign statistics 
 
-Instead of calculating statistics from all events whenver the stats API is called,I would maintain campaign counters such as sent,delivered,opened and clicked while processing events.
+Instead of calculating statistics from all events whenever the stats API is called, I would maintain campaign counters such as sent, delivered, opened and clicked while processing events.
 
 I would also maintain dailly delivered counts using the event timestamp in UTC.
 
 ### Late events
 
-Since events can arrive late or out of order ,I would use the event's timestamp rather than the time when the server received it.A late event should update correct day's statistics.
+Since events can arrive late or out of order, I would use the event's timestamp rather than the time when the server received it. A late event should update correct day's statistics.
 
 ### Overall 
 
-For this assignment ,the current in0-memory solution is sufficient.Atlarger scale,I would mianly replace it with a database ,add a queue and workers ,and maintain pre-calculated statistics.
+For this assignment ,the current in-memory solution is sufficient. At larger scale, I would mainly replace it with a database ,add a queue and workers ,and maintain pre-calculated statistics.
 
 
 
@@ -179,19 +179,19 @@ At 10:00 ,the dashboard shows:
 Before assuming that the dashboard is broken,I would consider:
 - More delivery events may have arrived during these 30 minutes, so delivered increased.
 - Some events may have arrived late or out of order.
-- Open events may have been deduolicated or corrected.
+- Open events may have been deduplicated or corrected.
 - The delivered and opened events may be processed at different times.
 - There could be a difference between the event timestamp and the time the event was received.
-- There could be an issue with the dashboard query ,aggregation ,or cached data.
+- There could be an issue with the dashboard query, aggregation, or cached data.
 - There could also be an actual bug in the code.
 
 ### What i would check first 
 
-I wpuld first check the raw events and processing logs between 10:00 and 10:30.
+I would first check the raw events and processing logs between 10:00 and 10:30.
 
-I would checl whether the 5,000 additional delivered events were actually received and whether any open events were removed, deduplicated,rejecyed, or processed late.
+I would check whether the 5,000 additional delivered events were actually received and whether any open events were removed, deduplicated,rejecyed, or processed late.
 
-Then I would compar the dashboard numbers with the actual store/ processed data.
+Then I would compare the dashboard numbers with the actual store processed data.
 
 ### How I would decide if it is a bug 
 
@@ -199,7 +199,7 @@ If the underlying events and aggregation produce the same numbers as the dashboa
 
 If the underlying data says that opened should still be 250,000 or higher but the dashboard shows 248,000 then new delivery events arriving will naturally increase the number.
 
-The more suspisious change is opened going down fmo 250,000 to 248,000.I check the underlying data and how the metric is calculated.
+The more suspisious change is opened going down from 250,000 to 248,000. I check the underlying data and how the metric is calculated.
 
 
 
@@ -223,11 +223,12 @@ The more suspisious change is opened going down fmo 250,000 to 248,000.I check t
 
 - I did not implement the optional `GET/campaigns/{campaign_id}/events` API because it was not required.
 
-- I did not work on deployment ,Kubernetes ,cloud setuo ,or authentication because they were not required for this assignment.
+- I did not work on deployment, Kubernetes, cloud setup, or authentication because they were not required for this assignment.
 
 ## If i had another day 
 
 - I would move the current in-memory storage to a database.
 
 - I would implement the optional events listing API with pagination.
+  
 - I would add more tests for large batches, late events, and failure cases.
