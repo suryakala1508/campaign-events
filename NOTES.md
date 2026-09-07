@@ -125,17 +125,17 @@ My order of priority will be:
 I will avpid spending time on frnotend,deployment,authentication, or other work outside the main requirements.
 
 
+---
 
 
-
-### PART-4 : Scale Memo 
+## PART-4 : Scale Memo 
 
 The current implementation uses in-memory storage,which is simple and enough for this assignment. If the event volume becomes very large ,this approach will have some limitations.
 
-## What breaks first?
+### What breaks first?
 The main problem is the in-memory data.If the server instances are running ,each instance will  have its own data and duplicate checking will its own data and duplicate checking will not be shared.
 
-## What would I change?
+### What would I change?
 I would move the data to a database such as PostgreSQL and store the events permanently.
 
 I would use a unique constraint on `event_id` so that provider retires do not count the same event twice.
@@ -146,24 +146,24 @@ For handling a large number of events, I would put a Queue between the API and t
 
 This allows multiple workers to process evets at the same time.
 
-## Campaign statistics 
+### Campaign statistics 
 
 Instead of calculating statistics from all events whenver the stats API is called,I would maintain campaign counters such as sent,delivered,opened and clicked while processing events.
 
 I would also maintain dailly delivered counts using the event timestamp in UTC.
 
-## Late events
+### Late events
 
 Since events can arrive late or out of order ,I would use the event's timestamp rather than the time when the server received it.A late event should update correct day's statistics.
 
-## Overall 
+### Overall 
 
 For this assignment ,the current in0-memory solution is sufficient.Atlarger scale,I would mianly replace it with a database ,add a queue and workers ,and maintain pre-calculated statistics.
 
 
 
 
-
+---
 
 
 ## Part5: The Angry Marketer
@@ -185,7 +185,7 @@ Before assuming that the dashboard is broken,I would consider:
 - There could be an issue with the dashboard query ,aggregation ,or cached data.
 - There could also be an actual bug in the code.
 
-## What i would check first 
+### What i would check first 
 
 I wpuld first check the raw events and processing logs between 10:00 and 10:30.
 
@@ -193,7 +193,7 @@ I would checl whether the 5,000 additional delivered events were actually receiv
 
 Then I would compar the dashboard numbers with the actual store/ processed data.
 
-## How I would decide if it is a bug 
+### How I would decide if it is a bug 
 
 If the underlying events and aggregation produce the same numbers as the dashboard ,then the dashboard is probably behaving as expected.
 
@@ -203,12 +203,12 @@ The more suspisious change is opened going down fmo 250,000 to 248,000.I check t
 
 
 
+---
 
 
+## What I completed /what I intentionally skipped 
 
-### What I completed /what I intentionally skipped 
-
-## completed ones
+### completed ones
 
 - Compelted the required `POST /events ` API.
 - Compelted the `GET /campaign/{campaign_id}/events` API because it was not required.
@@ -219,7 +219,7 @@ The more suspisious change is opened going down fmo 250,000 to 248,000.I check t
 - Checked that the debugging output matches `expected_output.txt`.
 - Ran the race detector and verified that there is no data race.
 
-## Intentionally skipped
+### Intentionally skipped
 
 - I did not implement the optional `GET/campaigns/{campaign_id}/events` API because it was not required.
 
