@@ -28,7 +28,7 @@ where the same contact can be counted once in each different campaign
 
 ---
 
-## Bug3:Daily Delivered coutn used local time
+## Bug3:Daily Delivered count used local time
 
 **What:** Some delivered events were counted under the wrong date. An extra 2026-08-08 date was appearing.
 
