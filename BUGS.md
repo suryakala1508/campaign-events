@@ -14,14 +14,14 @@
 
 ## Bug2- unique _opens was counted globally 
 
-**What:** `unqique_opens` was lower than expected because the same contact was only counted once across all campaigns
+**What:** `unqique_opens` was lower than expected because the same contact was only counted once across all campaigns.
 
 **Why:** The `openedBy` map was using only `ContactID ` as the key.
 
 For example,if the same contact opened two different campaigns,the second campaign was treated as if the cintact had  already opened something.
-But `unique_opens` should be unique for each campaign
+But `unique_opens` should be unique for each campaign.
 
-**Fix:** I changed the key include both the campaign and contact 
+**Fix:** I changed the key include both the campaign and contact.
 where the same contact can be counted once in each different campaign
 
 **Verified:** ```go ev.CampaignID +"\x00" +ev.ContactID
@@ -30,7 +30,7 @@ where the same contact can be counted once in each different campaign
 
 ## Bug3:Daily Delivered coutn used local time
 
-**What:** Some delivered events were counted under the wrong date .An extra 2026-08-08 date was appearing
+**What:** Some delivered events were counted under the wrong date. An extra 2026-08-08 date was appearing.
 
 **Why:** The code was using `ev.Timestamp.Local()` instead of `UTC`.Becuase of the timezone conversion,some events were moved to the next day.
 
@@ -48,10 +48,10 @@ Now the dially coutn always uses the UTC date from the event timestamp.
 **What:**
  The sent,delivered,opened, and clicked counts could change between runs.
 
-**Why:** There are 8 workers procesing events at the same time.They were updating the sae campaign counters without any synchronization. Because of this,some updates could be lost.
+**Why:** There are 8 workers procesing events at the same time.They were updating the see campaign counters without any synchronization. Because of this,some updates could be lost.
 
-**Fix:** I added a sync.utex to `CampaignStats` and used it while updating the counters in `apply()`
-The existing worker pool,channel, and WaitGroup were kept as tehy were.
+**Fix:** I added a sync.mutex to `CampaignStats` and used it while updating the counters in `apply()`
+The existing worker pool,channel, and WaitGroup were kept as they were.
 
 **Verified:** Ran `go run .events.jsonl` multiple times and got the same output every time.The output also matched `expected_output.txt`.
 
