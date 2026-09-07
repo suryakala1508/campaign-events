@@ -1,6 +1,6 @@
 ## BUGS.md
 
-## Bug1 -Duplicate event_id counted across batches
+## Bug1 - Duplicate event_id counted across batches
 
 **What:** The same `event_id` could be counted if it appeared in another batch.This caused the counts to become higher than expected.
 
@@ -12,7 +12,7 @@
 
 ---
 
-## Bug2- unique _opens was counted globally 
+## Bug2 - unique _opens was counted globally 
 
 **What:** `unqique_opens` was lower than expected because the same contact was only counted once across all campaigns.
 
@@ -28,7 +28,7 @@ where the same contact can be counted once in each different campaign
 
 ---
 
-## Bug3:Daily Delivered count used local time
+## Bug3 - Daily Delivered count used local time
 
 **What:** Some delivered events were counted under the wrong date. An extra 2026-08-08 date was appearing.
 
@@ -43,7 +43,7 @@ Now the dially coutn always uses the UTC date from the event timestamp.
 
 ---
 
-## Bug4: Concurrent counter updates
+## Bug4 - Concurrent counter updates
 
 **What:**
  The sent,delivered,opened, and clicked counts could change between runs.
