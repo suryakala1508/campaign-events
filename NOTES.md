@@ -3,7 +3,7 @@
 ## 1.My Interpretation of the problem 
 Relay receives event notifications from third-party delivery providers for marketing messages.
 
-Here `Relay` means Backend.
+We have to build the small backend service, Assume this backend name as the `Relay` which is the marketing system.
 
 The services needs:
 - Accept provider events through `POST/events`.
