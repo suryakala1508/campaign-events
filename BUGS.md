@@ -26,18 +26,22 @@ where the same contact can be counted once in each different campaign
 
 **Verified:** ```go ev.CampaignID +"\x00" +ev.ContactID
 
+---
+
 ## Bug3:Daily Delivered coutn used local time
 
 **What:** Some delivered events were counted under the wrong date .An extra 2026-08-08 date was appearing
 
-**Why:** The code was using ev.Timestamp.Local() instead of UTC.Becuase of the timezone conversion,some events were moved to the next day.
+**Why:** The code was using `ev.Timestamp.Local()` instead of `UTC`.Becuase of the timezone conversion,some events were moved to the next day.
 
 **Fix:** Changes it to:
-        ev.Timestamp.UTC().Format("2006-01-02")
+        `ev.Timestamp.UTC().Format("2006-01-02")`
 
 Now the dially coutn always uses the UTC date from the event timestamp.
 
 **Verified:** The dially delivered values now match expected_output.txt and the extra 2026-08-08  date is gone.
+
+---
 
 ## Bug4: Concurrent counter updates
 
