@@ -19,7 +19,7 @@ I used Claude to:
 - Discuss implementation approaches and debugging ideas.
 - Review parts of my work while solving the assignent.
 
-### opencode 
+### Opencode 
 I used Opencode while working on the project:
 - Implement the starter code and understand the existing features.
 - Help implement and debug parts of the backend.
